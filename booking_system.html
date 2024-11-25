@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel & Transportation Booking</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+    header {
+      background-color: #007BFF;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+    }
+    main {
+      padding: 20px;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    .options {
+      margin: 15px 0;
+    }
+    .button {
+      padding: 10px 20px;
+      color: white;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+    .output {
+      background: #e2e6ea;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Hotel & Transportation Booking System</h1>
+</header>
+
+<main>
+  <!-- Hotel Booking Section -->
+  <div class="section">
+    <h2>1. Book a Hotel</h2>
+    <div class="options" id="hotel-options">
+      <!-- Hotels will be dynamically loaded here -->
+    </div>
+    <button class="button" onclick="bookHotel()">Book Selected Hotel</button>
+  </div>
+
+  <!-- Transportation Booking Section -->
+  <div class="section">
+    <h2>2. Book Transportation</h2>
+    <div class="options" id="transport-options">
+      <!-- Transport options will be dynamically loaded here -->
+    </div>
+    <button class="button" onclick="bookTransport()">Book Selected Transport</button>
+  </div>
+
+  <!-- Current Bookings -->
+  <div class="section">
+    <h2>3. View Current Bookings</h2>
+    <div class="output" id="current-bookings">
+      <p>Hotel: Not booked yet</p>
+      <p>Transport: Not booked yet</p>
+    </div>
+  </div>
+</main>
+
+<script>
+  // Sample data
+  const hotels = [
+    { id: 1, name: "Grand Hotel", price_per_night: 150 },
+    { id: 2, name: "Budget Inn", price_per_night: 80 },
+    { id: 3, name: "Luxury Resort", price_per_night: 300 },
+  ];
+
+  const transportOptions = [
+    { id: 1, type: "Taxi", price_per_km: 2 },
+    { id: 2, type: "Bus", price_per_km: 0.5 },
+    { id: 3, type: "Private Car", price_per_km: 3 },
+  ];
+
+  let userBookings = { hotel: null, transport: null };
+
+  // Load options into the DOM
+  function loadOptions() {
+    const hotelOptionsDiv = document.getElementById("hotel-options");
+    hotels.forEach(hotel => {
+      hotelOptionsDiv.innerHTML += `
+        <input type="radio" name="hotel" value="${hotel.id}">
+        ${hotel.name} - $${hotel.price_per_night} per night<br>
+      `;
+    });
+
+    const transportOptionsDiv = document.getElementById("transport-options");
+    transportOptions.forEach(transport => {
+      transportOptionsDiv.innerHTML += `
+        <input type="radio" name="transport" value="${transport.id}">
+        ${transport.type} - $${transport.price_per_km} per km<br>
+      `;
+    });
+  }
+
+  // Booking logic
+  function bookHotel() {
+    const selectedHotelId = document.querySelector('input[name="hotel"]:checked');
+    if (selectedHotelId) {
+      const hotel = hotels.find(h => h.id == selectedHotelId.value);
+      userBookings.hotel = hotel;
+      alert(`You have successfully booked ${hotel.name}!`);
+      updateBookings();
+    } else {
+      alert("Please select a hotel to book.");
+    }
+  }
+
+  function bookTransport() {
+    const selectedTransportId = document.querySelector('input[name="transport"]:checked');
+    if (selectedTransportId) {
+      const transport = transportOptions.find(t => t.id == selectedTransportId.value);
+      userBookings.transport = transport;
+      alert(`You have successfully booked ${transport.type}!`);
+      updateBookings();
+    } else {
+      alert("Please select a transport option to book.");
+    }
+  }
+
+  // Update bookings display
+  function updateBookings() {
+    const bookingsDiv = document.getElementById("current-bookings");
+    const hotelBooking = userBookings.hotel
+      ? `${userBookings.hotel.name} - $${userBookings.hotel.price_per_night} per night`
+      : "Not booked yet";
+    const transportBooking = userBookings.transport
+      ? `${userBookings.transport.type} - $${userBookings.transport.price_per_km} per km`
+      : "Not booked yet";
+
+    bookingsDiv.innerHTML = `
+      <p>Hotel: ${hotelBooking}</p>
+      <p>Transport: ${transportBooking}</p>
+    `;
+  }
+
+  // Load options on page load
+  loadOptions();
+</script>
+
+</body>
+</html>
